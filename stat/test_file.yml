@@ -1,0 +1,17 @@
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: Test file status
+      stat:
+        path: /tmp/test
+      register: file_status_res
+
+    - name: file status response
+      debug:
+        var: file_status_res.stat.exists
+
+    - name: Conditional task
+      debug:
+        var: file_status_res.stat
+      when: file_status_res.stat.exists == false
