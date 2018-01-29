@@ -1,12 +1,13 @@
 # This playbook is to check the given file/directory is exists
 # using Ansible stat module. and print the response.
+# Usage: ansible-playbook -vv -e "INPUT_PATH=<file-dir-path>" -i <inventory> file_status.yml
 ---
 - hosts: all
   gather_facts: no
   tasks:
     - name: Test file status
       stat:
-        path: /tmp/test
+        path: "{{ INPUT_PATH }}"
       register: file_status_res
 
     - name: file status response
