@@ -1,3 +1,5 @@
+# This playbook is to check the given file/directory is exists
+# using Ansible stat module. and print the response.
 ---
 - hosts: all
   gather_facts: no
