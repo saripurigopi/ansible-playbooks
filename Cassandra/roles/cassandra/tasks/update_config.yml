@@ -29,7 +29,7 @@
   tags:
     - install
 
-- name: Set replication_factor to 1.
-  command: bash -c "cqlsh -e \"ALTER KEYSPACE system_auth WITH REPLICATION =   { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };\""
-  tags:
-    - install
+#- name: Set replication_factor to 1.
+#  command: bash -c "cqlsh -e \"ALTER KEYSPACE system_auth WITH REPLICATION =   { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };\""
+#  tags:
+#    - install
