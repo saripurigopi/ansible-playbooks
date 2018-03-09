@@ -8,6 +8,11 @@
   tags:
     - firewall
 
+- name: reload firewall
+  command: bash -c "firewall-cmd --reload"
+  tags:
+    - firewall
+
 - name: firewalld add to public zone
   firewalld:
     service: cassandra
