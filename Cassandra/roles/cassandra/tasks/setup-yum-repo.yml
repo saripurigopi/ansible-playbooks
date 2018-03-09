@@ -1,0 +1,20 @@
+#- name: Update cassandra.repo
+#  template:
+#    src: cassandra.repo.j2
+#    dest: /etc/yum.repos.d/cassandra.repo
+#    owner: root
+#    group: root
+#    mode: 0640
+#  notify:
+#    - search for cassandra
+#
+- name: Add Cassandra repo
+  yum_repository:
+    name: cassandra
+    description: Apache Cassandra
+    baseurl: https://www.apache.org/dist/cassandra/redhat/{{ CASSANDRA_VERSION }}/
+    gpgcheck: yes
+    repo_gpgcheck: yes
+    gpgkey: https://www.apache.org/dist/cassandra/KEYS
+  tags:
+    - setup

@@ -1,0 +1,94 @@
+- name: Download Java8u162
+  get_url:
+    url: http://download.oracle.com/otn-pub/java/jdk/8u162-b12/0da788060d494f5095bf8624735fa2f1/jdk-8u162-linux-x64.rpm
+    dest: /tmp/jdk-8u162-linux-x64.rpm
+    headers: "Cookie: oraclelicense=accept-securebackup-cookie"
+    validate_certs: no
+    checksum: sha256:20acf9bafb4ea10688812074942af480d34fd837ecd234173e80e2b53126b46b
+  tags:
+    - install
+
+- name: Install jdk-8u162-linux-x64.rpm
+  yum:
+    name: /tmp/jdk-8u162-linux-x64.rpm
+    state: present
+  with_items:
+    - /tmp/jdk-8u162-linux-x64.rpm
+    - python-setuptools
+    - python-setuptools-devel
+  tags:
+    - install
+
+#- name: Install pip
+#  command: bash -c "easy_install pip"
+#  tags:
+#    - install
+
+- name: Check Java version
+  command: bash -c "java -version"
+  register: java_version
+  tags:
+    - install
+
+- name: Install GCC
+  command: bash -c "yum -y install gcc"
+#  yum:
+#    name: gcc
+#    state: present
+  tags:
+    - install
+
+#- name: Download Python-2.7.14
+#  get_url:
+#    url: https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tgz
+#    dest: /tmp/Python-2.7.14.tgz
+#  tags:
+#    - install
+
+#- name: Compile and install Python-2.7.14
+#  command: bash -c "cd /tmp/;tar xvf Python-2.7.14.tgz;cd Python-2.7.14;./configure ;make altinstall" 
+#  tags:
+#    - install
+
+- name: Check python version
+  command: bash -c "python2.7 -V"
+  register: python_version
+  tags:
+    - install
+
+- name: Print Java and Python versions
+  debug: var={{ item }}
+  with_items:
+    - python_version.stdout_lines
+    - java_version.stdout_lines
+  tags:
+    - install
+
+- name: Add rpm keys
+  rpm_key:
+    state: present
+    key: https://www.apache.org/dist/cassandra/KEYS
+  tags:
+    - install
+
+- name: Update cache
+  yum:
+    name: "*"
+    state: present
+  tags:
+    - install
+
+- name: Install cassandra
+  yum:
+    name: cassandra
+    state: installed
+    update_cache: yes
+    disable_gpg_check: yes
+  tags:
+    - install
+
+- name: Force systemd service to reload for cassandra service to available
+  systemd:
+    daemon_reload: yes
+  tags:
+    - install

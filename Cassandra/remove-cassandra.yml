@@ -1,0 +1,9 @@
+---
+- hosts: cassandra-nodes
+  gather_facts: yes
+  remote_user: root
+  tasks:
+    - name: remove cassandra
+      yum:
+        name: cassandra
+        state: absent

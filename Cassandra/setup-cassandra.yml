@@ -1,0 +1,5 @@
+---
+- hosts: cassandra-nodes
+  gather_facts: yes
+  roles:
+    - { role: cassandra, tags: ['setup', 'install', 'config', 'firewall'] }

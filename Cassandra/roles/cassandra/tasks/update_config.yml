@@ -1,0 +1,35 @@
+- name: Update cassandra.yaml configuration file
+  replace:
+    path: /etc/cassandra/conf/cassandra.yaml
+    regexp: "{{ item.old }}"
+    replace: "{{ item.new }}"
+    owner: cassandra
+    group: cassandra
+    mode: 0644
+    backup: yes
+  with_items:
+    - { old: "cluster_name: 'Test Cluster'", new: "cluster_name: '{{ CASSANDRA_CLUSTER_NAME }}'" }
+    - { old: "listen_address: localhost", new: "listen_address: {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}" }
+      #    - { old: "storage_port: 7000", new: "storage_port: {{ CASSANDRA_STORAGE_PORT }}" }
+      #- { old: "ssl_storage_port: 7001", new: "ssl_storage_port: {{ CASSANDRA_SSL_STORAGE_PORT }}" }
+      #- { old: "native_transport_port: 9042", new: "native_transport_port: {{ NATIVE_TRANSPORT_PORT }}" }
+    - { old: "- seeds: \"127.0.0.1\"", new: "          - seeds: \"{{ CASSANDRA_CLUSTER_SEEDS |join(',') }}\"" }
+  notify:
+    - start cassandra service
+    - systemctl daemon-reload
+    - enable cassandra service
+  tags:
+    - config
+
+- name: Make sure cassandra service is up
+  service:
+    name: cassandra
+    state: started
+    enabled: yes
+  tags:
+    - install
+
+- name: Set replication_factor to 1.
+  command: bash -c "cqlsh -e \"ALTER KEYSPACE system_auth WITH REPLICATION =   { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };\""
+  tags:
+    - install

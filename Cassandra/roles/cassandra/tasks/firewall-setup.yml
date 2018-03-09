@@ -1,0 +1,48 @@
+- name: create cassandra service for firewalld.
+  template:
+    src: cassandra.xml.j2
+    dest: /usr/lib/firewalld/services/cassandra.xml
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - firewall
+
+- name: firewalld add to public zone
+  firewalld:
+    service: cassandra
+    permanent: true
+    state: enabled
+  tags:
+    - firewall
+
+- name: firewalld add cassandra
+  firewalld:
+    zone: public
+    source: "{{ CASSANDRA_CLUSTER_SUBNET }}"
+    state: enabled
+  tags:
+    - firewall
+
+- name: firewall add port 9042
+  firewalld:
+      #    service: cassandra
+    port: 9042/tcp
+    permanent: true
+    state: enabled
+  tags:
+    - firewall
+
+- name: firewall add port 7000
+  firewalld:
+      #service: cassandra
+    port: 7000/tcp
+    permanent: true
+    state: enabled
+  tags:
+    - firewall
+
+- name: reload firewall
+  command: bash -c "firewall-cmd --reload"
+  tags:
+    - firewall

@@ -1,0 +1,10 @@
+---
+# tasks file for cassandra
+
+- import_tasks: setup-yum-repo.yml
+
+- import_tasks: install.yml
+
+- import_tasks: update_config.yml
+
+- import_tasks: firewall-setup.yml

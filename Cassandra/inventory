@@ -1,0 +1,4 @@
+[cassandra-nodes]
+10.32.68.40 ansible_connection=ssh ansible_ssh_user=root
+10.32.68.41 ansible_connection=ssh ansible_ssh_user=root
+10.32.68.42 ansible_connection=ssh ansible_ssh_user=root
